@@ -33,6 +33,7 @@ class Command(BaseCommand):
             print('Valid hosts:')
             for name, _ in self.config.items('hosts'):
                 print('(*) %s => %s' % (name, _))
+            return
         # if not self.args['config']:
         #     print('Please specify a valid config.')
         #     print('Valid configs:')

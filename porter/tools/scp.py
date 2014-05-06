@@ -8,7 +8,7 @@ CMD_AGENT   = "scp -P %(port)s %(local_file)s %(user)s@%(host)s:%(remote_file)s"
 CMD_NOAGENT = "scp -P %(port)s -i %(ident)s %(local_file)s %(user)s@%(host)s:%(remote_file)s"
 
 
-def scp(local_file, remote_file, copy_if_exists=False):
+def scp(local_file, remote_file):
     args = {
         "port": env.port,
         "local_file": local_file,
@@ -26,5 +26,4 @@ def scp(local_file, remote_file, copy_if_exists=False):
         cmd = CMD_NOAGENT
         args['ident'] = env.key_filename
 
-    if not rexists(remote_file) or copy_if_exists:
-        return local(cmd % args)
+    return local(cmd % args)

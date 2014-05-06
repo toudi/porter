@@ -9,6 +9,7 @@ from fabric.api import env
 from porter.tools.rsync import rsync
 from fabric.contrib.files import exists as rexists
 from fabric.operations import run
+from porter.plugins.base import get_plugin_instance
 
 
 SIG_SOURCE_PRE_SEND = 0x01
@@ -21,13 +22,15 @@ SIG_DEPLOY = 0x30
 
 
 class ProjectModule(object):
+
     def __init__(self, modulename, project):
         self.modulename = modulename
         self.project = project
         self.moduledir = project.get_module_dir(modulename)
         self.signal_handlers = {}
         self.push_signal_handler(SIG_DEPLOY, self._signal_handler_deploy)
-        self.push_signal_handler(SIG_SOURCE_PRE_SEND, self._signal_handler_source_pre_send)
+        self.push_signal_handler(
+            SIG_SOURCE_PRE_SEND, self._signal_handler_source_pre_send)
         try:
             deployment = imp.load_source(
                 'deployment',
@@ -48,7 +51,12 @@ class ProjectModule(object):
             )
         except IOError:
             pass
-
+        # register hooks from plugins
+        for plugin in\
+            self.get_config_value('module', 'plugins', '')\
+                .split(','):
+            if plugin:
+                get_plugin_instance(plugin).register_signal_handlers(self)
 
     def depends(self):
         out = []
@@ -129,11 +137,15 @@ class ProjectModule(object):
         self.signal(SIG_SOURCE_POST_SEND)
         self.signal(SIG_DEPLOY_FINISH)
 
+    @property
+    def destpath(self):
+        return self.get_config_value('module', 'path')
+
     def send_source(self):
         use_rsync = self.get_config_value('module', 'use_rsync', True)
         if use_rsync:
             with lcd('%s/repo' % self.moduledir):
-                remote_dir = self.get_config_value('module', 'path')
+                remote_dir = self.destpath
                 if not rexists(remote_dir):
                     run('mkdir -p %s' % remote_dir)
 
@@ -146,7 +158,10 @@ class ProjectModule(object):
                     "%(user)s@%(host)s:%(project)s" % {
                         "user": env.user,
                         "host": env.host,
-                        "project": self.get_config_value('module', 'path')
+                        "project": self.destpath
                     },
                     rsync_options
                 )
+
+    def get_config_dir(self):
+        return '%s/config/%s' % (self.moduledir, self.project.args['config'])

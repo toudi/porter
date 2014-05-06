@@ -34,5 +34,6 @@ def update_supervisor_launcher(
     use_sudo=False,
     replace_dict=None
 ):
-    scp(source_location, dest_location, use_sudo)
-    sed_replace(replace_dict, '%s/%s' % (dest_location, basename(source_location)), use_sudo=use_sudo)
+    scp(source_location, dest_location)
+    if replace_dict is not None:
+        sed_replace(replace_dict, '%s/%s' % (dest_location, basename(source_location)), use_sudo=use_sudo)
