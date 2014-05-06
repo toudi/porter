@@ -15,13 +15,19 @@ class Plugin(BasePlugin):
     def post_send(self, module):
         venv_path = module.get_config_value('plugins.virtualenv', 'path')
         setup_virtualenv(venv_path)
-        requirements_file = module.get_config_value('plugins.virtualenv', 'requirements')
-        if requirements_file is not None:
-            requirements_file = requirements_file.replace('__destpath__', module.destpath)
-            virtualenv(
-                venv_path,
-                'pip install -r %s' % requirements_file
-            )
+        requirements = module.get_config_value('plugins.virtualenv', 'requirements').split(',')
+        if requirements is not None:
+            for requir in requirements:
+                if requir.startswith('file:'):
+                    requir = requir.replace('__destpath__', module.destpath)
+                    _what = '-r %s' % requir
+                else:
+                    _what = '"%s"' % requir
+
+                virtualenv(
+                    venv_path,
+                    'pip install %s' % _what
+                )
 
         files = module.get_config_value(
             'plugins.virtualenv', 'update_files', '').split(',')

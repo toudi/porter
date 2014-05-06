@@ -25,7 +25,8 @@ class Plugin(object):
                 module.moduledir,
                 module.get_config_value(
                     'plugins.supervisor',
-                    'launcher'
+                    'launcher',
+                    '%s.conf' % module.modulename
                 )
             ),
             use_sudo=True,
