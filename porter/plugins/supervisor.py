@@ -5,9 +5,11 @@ from porter.tools.supervisor import update_supervisor_launcher
 from porter.tools.supervisor import stop_group
 from porter.tools.supervisor import start_group
 from porter.tools.supervisor import reload_cfg
+from porter.plugins.base import BasePlugin
 
+SIG_LAUNCHER_UPDATED = 'supervisor-launcher-updated'
 
-class Plugin(object):
+class Plugin(BasePlugin):
     def command_line_args(self, group):
         group.add_argument('--update-config', '-suc', action='store_true', default=False, help='Update supervisor config files')
 
@@ -23,14 +25,23 @@ class Plugin(object):
         update_supervisor_launcher(
             source_location='%s/supervisor/%s' % (
                 module.moduledir,
-                module.get_config_value(
-                    'plugins.supervisor',
+                self.get_config_value(
+                    module,
                     'launcher',
                     '%s.conf' % module.modulename
                 )
             ),
             use_sudo=True,
         )
+        launcher = '%s/%s.conf' % (self.get_supervisor_path(), module.modulename)
+        module.signal(SIG_LAUNCHER_UPDATED, launcher=launcher)
+
+    def get_supervisor_path(self):
+        """
+        TODO: update this code for locally-installed supervisor
+        (i.e. pip install supervisor)
+        """
+        return '/etc/supervisor/conf.d/'
 
     def finish(self, module):
         reload_cfg(use_sudo=True)

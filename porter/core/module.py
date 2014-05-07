@@ -52,22 +52,29 @@ class ProjectModule(object):
         except IOError:
             pass
         # register hooks from plugins
-        for plugin in\
-            self.get_config_value('module', 'plugins', '')\
-                .split(','):
-            if plugin:
-                get_plugin_instance(plugin).register_signal_handlers(self)
+        for plugin in self.plugins():
+            plugin.register_signal_handlers(self)
 
-    def depends(self):
-        out = []
+    def depends(self, out=None):
+        if out is None:
+            out = []
+
         try:
             config = self.config
             for modulename in config.get('module', 'depends', '').split(','):
-                out.extend(ProjectModule(modulename, self.project).depends())
-
+                _depends = ProjectModule(modulename, self.project).depends(out)
+                # we want to append the dependencies, but without those which
+                # have been already processed. we can't use regular set here,
+                # because the order is significant
+                # original answer:
+                # http://stackoverflow.com/questions/1319338/combining-two-lists-and-removing-duplicates-without-removing-duplicates-in-orig
+                out += list(set(_depends) - set(out))
         except (NoOptionError, NoSectionError):
             pass
-        out.append(self.modulename)
+
+        if self.modulename not in out:
+            out.append(self.modulename)
+
         return out
 
     @property
@@ -83,10 +90,10 @@ class ProjectModule(object):
     def deploy(self):
         self.signal(SIG_DEPLOY)
 
-    def signal(self, signum):
+    def signal(self, signum, *args, **kwargs):
         try:
             for handler in self.signal_handlers[signum]:
-                handler(self)
+                handler(self, *args, **kwargs)
         except KeyError:
             pass
 
@@ -165,3 +172,8 @@ class ProjectModule(object):
 
     def get_config_dir(self):
         return '%s/config/%s' % (self.moduledir, self.project.args['config'])
+
+    def plugins(self):
+        for section in self.config.sections():
+            if section.startswith('plugin:'):
+                yield get_plugin_instance(section.replace('plugin:', ''))

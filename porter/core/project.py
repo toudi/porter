@@ -7,7 +7,19 @@ import os.path
 from os.path import dirname
 from os import getcwd
 from ConfigParser import NoOptionError, NoSectionError
+from peewee import *
 
+
+db = SqliteDatabase('porter.db')
+
+class ModuleVersion(Model):
+    module = TextField()
+    host = TextField()
+    release = TextField()
+    version = TextField()
+
+    class Meta:
+        database = db
 
 
 class Project(object):
@@ -29,17 +41,35 @@ class Project(object):
             'Starting deployment of %s' % self.config.get('project', 'name')
         )
         for module in self.depends():
-            self.logger.debug('Deploying module %s' % module)
-            self.get_module(module).deploy()
-            # print(module)
-        # run('uname -s')
+            current_version = ModuleVersion(
+                host = env.host_string,
+                release = self.args['release'],
+                module = module
+            )
+
+            try:
+                current_version = ModuleVersion.get(
+                    ModuleVersion.host == env.host_string,
+                    ModuleVersion.release == self.args['release'],
+                    ModuleVersion.module == module
+                )
+            except OperationalError:
+                ModuleVersion.create_table()
+            except DoesNotExist:
+                pass
+            module_instance = self.get_module(module)
+            if current_version.version != module_instance.scm.version:
+                self.logger.debug('Deploying module %s' % module)
+                module_instance.deploy()
+                current_version.version = module_instance.scm.version
+                current_version.save()
         disconnect_all()
 
     def depends(self):
         out = []
         for modulename in self.config.get('project', 'depends').split(','):
             m = self.get_module(modulename)
-            out.extend(m.depends())
+            out += m.depends()
         return out
 
     def get_module_dir(self, module):

@@ -4,6 +4,7 @@ from porter.tools.sed import sed_replace
 from fabric.contrib.files import exists as rexists
 from porter.tools.virtualenv import setup_virtualenv
 from porter.tools.virtualenv import virtualenv
+from porter.plugins.supervisor import SIG_LAUNCHER_UPDATED
 
 
 class Plugin(BasePlugin):
@@ -11,12 +12,14 @@ class Plugin(BasePlugin):
     def register_signal_handlers(self, module):
         super(Plugin, self).register_signal_handlers(module)
         module.push_signal_handler(SIG_SOURCE_POST_SEND, self.post_send)
+        module.push_signal_handler(SIG_LAUNCHER_UPDATED, self.replace_path)
 
     def post_send(self, module):
-        venv_path = module.get_config_value('plugins.virtualenv', 'path')
+        venv_path = self.get_config_value(module, 'path')
         setup_virtualenv(venv_path)
-        requirements = module.get_config_value('plugins.virtualenv', 'requirements').split(',')
+        requirements = self.get_config_value(module, 'requirements')
         if requirements is not None:
+            requirements = requirements.split(',')
             for requir in requirements:
                 if requir.startswith('file:'):
                     requir = requir.replace('__destpath__', module.destpath)
@@ -29,15 +32,13 @@ class Plugin(BasePlugin):
                     'pip install %s' % _what
                 )
 
-        files = module.get_config_value(
-            'plugins.virtualenv', 'update_files', '').split(',')
-        for _file in files:
-            if rexists(_file):
-                sed_replace(
-                    {
-                        'env': module.get_config_value('plugins.virtualenv', 'path'),
-                        'project': module.destpath
-                    },
-                    _file,
-                    use_sudo=True
-                )
+    def replace_path(self, module, launcher):
+        if rexists(launcher):
+            sed_replace(
+                {
+                    'env': self.get_config_value(module, 'path'),
+                    'project': module.destpath
+                },
+                launcher,
+                use_sudo=True
+            )
