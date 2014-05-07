@@ -29,27 +29,16 @@ class ProjectModule(object):
         self.moduledir = project.get_module_dir(modulename)
         self.signal_handlers = {}
         self.push_signal_handler(SIG_DEPLOY, self._signal_handler_deploy)
-        self.push_signal_handler(
-            SIG_SOURCE_PRE_SEND, self._signal_handler_source_pre_send)
+
         try:
             deployment = imp.load_source(
                 'deployment',
                 '%s/deployment.py' %
                 self.project.get_module_dir(self.modulename)
             )
-            self.replace_signal_handler(
-                SIG_DEPLOY,
-                getattr(deployment, 'deploy', self._signal_handler_deploy)
-            )
-            self.replace_signal_handler(
-                SIG_SOURCE_PRE_SEND,
-                getattr(
-                    deployment,
-                    'source_pre_send',
-                    self._signal_handler_source_pre_send
-                )
-            )
-        except IOError:
+            deployment.register_signal_handlers(self)
+
+        except (IOError, AttributeError):
             pass
         # register hooks from plugins
         for plugin in self.plugins():
@@ -132,9 +121,6 @@ class ProjectModule(object):
     def replace_signal_handler(self, signal, handler):
         self.pop_signal_handler(signal)
         self.push_signal_handler(signal, handler)
-
-    def _signal_handler_source_pre_send(self, foo):
-        pass
 
     def _signal_handler_deploy(self, foo):
         self.signal(SIG_DEPLOY_START)

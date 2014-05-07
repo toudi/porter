@@ -6,12 +6,16 @@ from porter.tools.supervisor import stop_group
 from porter.tools.supervisor import start_group
 from porter.tools.supervisor import reload_cfg
 from porter.plugins.base import BasePlugin
+from fabric.context_managers import settings
 
 SIG_LAUNCHER_UPDATED = 'supervisor-launcher-updated'
 
+
 class Plugin(BasePlugin):
+
     def command_line_args(self, group):
-        group.add_argument('--update-config', '-suc', action='store_true', default=False, help='Update supervisor config files')
+        group.add_argument('--update-config', '-suc', action='store_true',
+                           default=False, help='Update supervisor config files')
 
     def register_signal_handlers(self, module):
         module.push_signal_handler(SIG_DEPLOY_START, self.start)
@@ -19,21 +23,24 @@ class Plugin(BasePlugin):
         module.push_signal_handler(SIG_DEPLOY_FINISH, self.finish)
 
     def start(self, module):
-        stop_group(module.modulename, use_sudo=True)
+        with settings(warn_only=True):
+            stop_group(module.modulename, use_sudo=True)
 
     def post_send(self, module):
+        launcher_file = self.get_config_value(
+            module,
+            'launcher',
+            '%s.conf' % module.modulename
+        )
+
         update_supervisor_launcher(
             source_location='%s/supervisor/%s' % (
                 module.moduledir,
-                self.get_config_value(
-                    module,
-                    'launcher',
-                    '%s.conf' % module.modulename
-                )
+                launcher_file
             ),
             use_sudo=True,
         )
-        launcher = '%s/%s.conf' % (self.get_supervisor_path(), module.modulename)
+        launcher = '%s/%s' % (self.get_supervisor_path(), launcher_file)
         module.signal(SIG_LAUNCHER_UPDATED, launcher=launcher)
 
     def get_supervisor_path(self):
