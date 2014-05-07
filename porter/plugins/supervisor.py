@@ -24,7 +24,10 @@ class Plugin(BasePlugin):
 
     def start(self, module):
         with settings(warn_only=True):
-            stop_group(module.modulename, use_sudo=True)
+            stop_group(
+                self.get_config_value(module, 'group_name', module.modulename),
+                use_sudo=True
+            )
 
     def post_send(self, module):
         launcher_file = self.get_config_value(
@@ -52,4 +55,7 @@ class Plugin(BasePlugin):
 
     def finish(self, module):
         reload_cfg(use_sudo=True)
-        start_group(module.modulename, use_sudo=True)
+        start_group(
+            self.get_config_value(module, 'group_name', module.modulename),
+            use_sudo=True
+        )

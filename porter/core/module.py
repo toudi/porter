@@ -14,8 +14,11 @@ from porter.plugins.base import get_plugin_instance
 
 SIG_SOURCE_PRE_SEND = 0x01
 SIG_SOURCE_POST_SEND = 0x02
+SIG_SOURCE_SEND = 0x03
+
 SIG_SOURCE_DEPLOYMENT_INIT = 0x10
 SIG_SOURCE_DEPLOYMENT_FINISH = 0x11
+
 SIG_DEPLOY_START = 0x20
 SIG_DEPLOY_FINISH = 0x21
 SIG_DEPLOY = 0x30
@@ -29,6 +32,7 @@ class ProjectModule(object):
         self.moduledir = project.get_module_dir(modulename)
         self.signal_handlers = {}
         self.push_signal_handler(SIG_DEPLOY, self._signal_handler_deploy)
+        self.push_signal_handler(SIG_SOURCE_SEND, self._send_source)
 
         try:
             deployment = imp.load_source(
@@ -126,7 +130,7 @@ class ProjectModule(object):
         self.signal(SIG_DEPLOY_START)
         self.scm.checkout()
         self.signal(SIG_SOURCE_PRE_SEND)
-        self.send_source()
+        self.signal(SIG_SOURCE_SEND)
         self.signal(SIG_SOURCE_POST_SEND)
         self.signal(SIG_DEPLOY_FINISH)
 
@@ -134,7 +138,7 @@ class ProjectModule(object):
     def destpath(self):
         return self.get_config_value('module', 'path')
 
-    def send_source(self):
+    def _send_source(self, module):
         use_rsync = self.get_config_value('module', 'use_rsync', True)
         if use_rsync:
             with lcd('%s/repo' % self.moduledir):
@@ -163,3 +167,12 @@ class ProjectModule(object):
         for section in self.config.sections():
             if section.startswith('plugin:'):
                 yield get_plugin_instance(section.replace('plugin:', ''))
+
+    @property
+    def version(self):
+        try:
+            return self.scm.version
+        except NoSectionError:
+            return self.get_config_value(
+                'release:%s' % self.project.args['release'], 'version'
+            )

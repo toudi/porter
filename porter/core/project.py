@@ -58,10 +58,10 @@ class Project(object):
             except DoesNotExist:
                 pass
             module_instance = self.get_module(module)
-            if current_version.version != module_instance.scm.version:
+            if current_version.version != module_instance.version:
                 self.logger.debug('Deploying module %s' % module)
                 module_instance.deploy()
-                current_version.version = module_instance.scm.version
+                current_version.version = module_instance.version
                 current_version.save()
         disconnect_all()
 
