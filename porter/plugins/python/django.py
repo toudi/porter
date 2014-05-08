@@ -19,37 +19,43 @@ class Plugin(PythonPlugin):
         settings_file = self.get_config_value(
             module, 'settings_file', None
         )
-        if settings_file is not None and exists(settings_file):
-            scp(
-                '%s/%s' % (
-                    module.get_config_dir(),
-                    settings_file
-                ),
-                '%s/%s' % (
-                    module.destpath,
-                    settings_file
-                )
-            )
-        settings = ''
+        subdir = self.get_config_value(module, 'settings_dir')
         if settings_file is not None:
-            settings_module = settings_file.replace('.py', '').replace('/', '.')
-            settings = 'DJANGO_SETTINGS_MODULE=%s ' % settings_module
+            _settings_file = '%s/%s' % (module.get_config_dir(), settings_file)
+            destpath = module.destpath
+            if subdir:
+                destpath += '/' + subdir
+            if exists(_settings_file):
+                scp(
+                    _settings_file,
+                    '%s/%s' % (
+                        destpath,
+                        settings_file
+                    )
+                )
+        if bool(int(self.get_config_value(module, 'migrate', True))) == True:
+            settings = ''
+            if settings_file is not None:
+                if subdir is not None:
+                    settings_file = subdir + '/' + settings_file
+                settings_module = settings_file.replace('.py', '').replace('/', '.')
+                settings = 'DJANGO_SETTINGS_MODULE=%s ' % settings_module
 
-        manage_cmd = MANAGE_PY % {
-            'settings': settings,
-            'cmd': 'syncdb --no-initial-data'
-        }
+            manage_cmd = MANAGE_PY % {
+                'settings': settings,
+                'cmd': 'syncdb --no-initial-data'
+            }
 
-        module.signal(SIG_SYNCDB)
+            module.signal(SIG_SYNCDB)
 
-        virtualenv(
-            module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
-            manage_cmd,
-            cd_path=module.destpath
-        )
-        manage_cmd = manage_cmd.replace('syncdb', 'migrate')
-        virtualenv(
-            module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
-            manage_cmd,
-            cd_path=module.destpath
-        )
+            virtualenv(
+                module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
+                manage_cmd,
+                cd_path=module.destpath
+            )
+            manage_cmd = manage_cmd.replace('syncdb', 'migrate')
+            virtualenv(
+                module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
+                manage_cmd,
+                cd_path=module.destpath
+            )

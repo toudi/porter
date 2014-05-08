@@ -27,3 +27,9 @@ def scp(local_file, remote_file):
         args['ident'] = env.key_filename
 
     return local(cmd % args)
+
+
+def copy_config_file(module, _file, destpath=None):
+    if not destpath:
+        destpath = module.destpath
+    return scp('%s/%s' % (module.get_config_dir(), _file), destpath)
