@@ -58,7 +58,11 @@ class Project(object):
             except DoesNotExist:
                 pass
             module_instance = self.get_module(module)
-            if current_version.version != module_instance.version:
+            is_forced = False
+            if self.args['force'] is not None:
+                if module in self.args['force'] or self.args['force'] == '':
+                    is_forced = True
+            if current_version.version != module_instance.version or is_forced:
                 self.logger.debug('Deploying module %s' % module)
                 module_instance.deploy()
                 current_version.version = module_instance.version

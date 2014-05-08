@@ -15,6 +15,7 @@ class Command(BaseCommand):
         subcommand.add_argument('--host')
         subcommand.add_argument('--config')
         subcommand.add_argument('--release', '-r', default='stable')
+        subcommand.add_argument('--force', default=None, help='Force specific modules to deploy. Specify empty string to force all modules to be re-deployed')
 
         for plugin in self.config.get('project', 'plugins').split(','):
             plugin_code = import_module(plugin.strip()).Plugin()
