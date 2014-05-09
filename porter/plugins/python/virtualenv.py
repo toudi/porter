@@ -9,6 +9,11 @@ from porter.plugins.supervisor import SIG_LAUNCHER_UPDATED
 
 class Plugin(BasePlugin):
 
+    def command_line_args(self, group):
+        group.add_argument('--update-requirements', action='store_true',
+                           default=False,
+                           help='Install or update requirements to virtualenv')
+
     def register_signal_handlers(self, module):
         super(Plugin, self).register_signal_handlers(module)
         module.push_signal_handler(SIG_SOURCE_POST_SEND, self.post_send)
@@ -17,20 +22,21 @@ class Plugin(BasePlugin):
     def post_send(self, module):
         venv_path = self.get_config_value(module, 'path')
         setup_virtualenv(venv_path)
-        requirements = self.get_config_value(module, 'requirements')
-        if requirements is not None:
-            requirements = requirements.split(',')
-            for requir in requirements:
-                if requir.startswith('file:'):
-                    requir = requir.replace('__destpath__', module.destpath)
-                    _what = '-r %s' % requir
-                else:
-                    _what = '"%s"' % requir
+        if module.project.args['update-requirements'] is True:
+            requirements = self.get_config_value(module, 'requirements')
+            if requirements is not None:
+                requirements = requirements.split(',')
+                for requir in requirements:
+                    if requir.startswith('file:'):
+                        requir = requir.replace('__destpath__', module.destpath)
+                        _what = '-r %s' % requir
+                    else:
+                        _what = '"%s"' % requir
 
-                virtualenv(
-                    venv_path,
-                    'pip install %s' % _what
-                )
+                    virtualenv(
+                        venv_path,
+                        'pip install %s' % _what
+                    )
 
     def replace_path(self, module, launcher):
         if rexists(launcher):

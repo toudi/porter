@@ -14,8 +14,8 @@ SIG_LAUNCHER_UPDATED = 'supervisor-launcher-updated'
 class Plugin(BasePlugin):
 
     def command_line_args(self, group):
-        group.add_argument('--update-config', '-suc', action='store_true',
-                           default=False, help='Update supervisor config files')
+        group.add_argument('--update-launcher', action='store_true',
+                           default=False, help='Update supervisor launcher')
 
     def register_signal_handlers(self, module):
         module.push_signal_handler(SIG_DEPLOY_START, self.start)

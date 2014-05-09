@@ -3,6 +3,7 @@ from porter.tools.scp import scp
 from porter.core.module import SIG_SOURCE_POST_SEND
 from porter.tools.virtualenv import virtualenv
 from os.path import exists
+from fabric.api import settings
 
 
 MANAGE_PY = '%(settings)spython manage.py %(cmd)s'
@@ -10,6 +11,9 @@ MANAGE_PY = '%(settings)spython manage.py %(cmd)s'
 SIG_SYNCDB = 'django-syncdb'
 
 class Plugin(PythonPlugin):
+
+    def command_line_args(self, group):
+        group.add_argument('--migrate-database', action='store_true', default=False, help='Perform database migrations')
 
     def register_signal_handlers(self, module):
         super(PythonPlugin, self).register_signal_handlers(module)
@@ -46,16 +50,18 @@ class Plugin(PythonPlugin):
                 'cmd': 'syncdb --no-initial-data'
             }
 
-            module.signal(SIG_SYNCDB)
+            if module.project.args['migrate-database'] is True:
+                module.signal(SIG_SYNCDB)
 
-            virtualenv(
-                module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
-                manage_cmd,
-                cd_path=module.destpath
-            )
-            manage_cmd = manage_cmd.replace('syncdb', 'migrate')
-            virtualenv(
-                module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
-                manage_cmd,
-                cd_path=module.destpath
-            )
+                virtualenv(
+                    module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
+                    manage_cmd,
+                    cd_path=module.destpath
+                )
+                with settings(warn_only=True):
+                    manage_cmd = manage_cmd.replace('syncdb', 'migrate')
+                    virtualenv(
+                        module.get_config_value('plugin:porter.plugins.python.virtualenv', 'path'),
+                        manage_cmd,
+                        cd_path=module.destpath
+                    )

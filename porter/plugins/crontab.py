@@ -7,24 +7,29 @@ from fabric.operations import run
 
 class Plugin(BasePlugin):
     def command_line_args(self, group):
-        group.add_argument('--restart', action='store_true', default=False, help='Restart the uWSGI process')
+        group.add_argument('--update-crontab', action='store_true', default=False, help='Update crontab')
 
     def register_signal_handlers(self, module):
         module.push_signal_handler(SIG_SOURCE_POST_SEND, self.post_send)
         module.push_signal_handler(SIG_DEPLOY_FINISH, self.finish)
 
-    def post_send(self, module):
-        self.file = self.get_config_value(module, 'file', module.modulename)
-        if not self.file.endswith('.crontab'):
-            self.file += '.crontab'
+    def get_crontab_file(self, module):
+        _file = self.get_config_value(module, 'file', module.modulename)
+        if not _file.endswith('.crontab'):
+            _file += '.crontab'
+        return _file
 
+    def post_send(self, module):
+        _file = self.get_crontab_file(module)
         scp(
             '%s/crontab/%s' % (
                 module.moduledir,
-                self.file
+                _file
             ),
             '/tmp'
         )
 
     def finish(self, module):
-        run('crontab /tmp/%s && rm -f /tmp/%s' % (self.file, self.file))
+        if module.project.args['update-crontab'] is True:
+            _file = self.get_crontab_file(module)
+            run('crontab /tmp/%s && rm -f /tmp/%s' % (_file, _file))
