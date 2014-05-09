@@ -17,12 +17,16 @@ class Command(BaseCommand):
         subcommand.add_argument('--release', '-r', default='stable')
         subcommand.add_argument('--force', default=None, help='Force specific modules to deploy. Specify empty string to force all modules to be re-deployed')
 
-        for plugin in self.config.get('project', 'plugins').split(','):
-            plugin_code = import_module(plugin.strip()).Plugin()
-            args_group_name = plugin.split('.')[-1]
+        project = Project(args={}, config=self.config)
+
+        for plugin in project.get_used_plugins():
+            plugin_code = import_module(plugin).Plugin()
+            args_group_name = plugin
             group = subcommand.add_argument_group(args_group_name)
             try:
                 plugin_code.command_line_args(group)
+            except AttributeError:
+                pass
             except:
                 from traceback import print_exc
                 print_exc()

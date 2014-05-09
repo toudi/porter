@@ -79,10 +79,18 @@ class Project(object):
     def get_module_dir(self, module):
         try:
             module_dir = self.config.get('modules', module)
-        except NoOptionError, NoSectionError:
+        except (NoOptionError, NoSectionError):
             module_dir = module
 
         return os.path.sep.join((getcwd(), module_dir))
 
     def get_module(self, module):
         return ProjectModule(module, self)
+
+    def get_used_plugins(self):
+        plugins = set()
+        for module in self.depends():
+            for plugin in self.get_module(module).plugins():
+                plugins.update([plugin.__module__])
+
+        return plugins
