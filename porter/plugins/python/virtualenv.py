@@ -38,7 +38,7 @@ class Plugin(BasePlugin):
                         'pip install %s' % _what
                     )
 
-    def replace_path(self, module, launcher):
+    def replace_path(self, module, launcher, use_sudo):
         if rexists(launcher):
             sed_replace(
                 {
@@ -46,5 +46,5 @@ class Plugin(BasePlugin):
                     'project': module.destpath
                 },
                 launcher,
-                use_sudo=True
+                use_sudo=use_sudo
             )

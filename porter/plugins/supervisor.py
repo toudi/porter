@@ -36,15 +36,16 @@ class Plugin(BasePlugin):
             '%s.conf' % module.modulename
         )
 
+        use_sudo = self.get_config_value(module, 'use_sudo', False)
         update_supervisor_launcher(
             source_location='%s/supervisor/%s' % (
                 module.moduledir,
                 launcher_file
             ),
-            use_sudo=True,
+            use_sudo=use_sudo,
         )
         launcher = '%s/%s' % (self.get_supervisor_path(), launcher_file)
-        module.signal(SIG_LAUNCHER_UPDATED, launcher=launcher)
+        module.signal(SIG_LAUNCHER_UPDATED, launcher=launcher, use_sudo=use_sudo)
 
     def get_supervisor_path(self):
         """
