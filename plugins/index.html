@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Available plugins &mdash; porter 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="porter 0.2.0 documentation" href="../index.html" />
+    <link rel="next" title="Python base plugin" href="python/base.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="../under-the-hood/scm.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="python/base.html" title="Python base plugin"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../under-the-hood/scm.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="available-plugins">
+<h1>Available plugins<a class="headerlink" href="#available-plugins" title="Permalink to this headline">¶</a></h1>
+<p>During the deployment procedure, several hooks are signalled to the modules.</p>
+<p>A plugin is a piece of code, which can do something with your module on those
+hooks. For instance, if your module has to have some crontab entries, porter
+has a plugin which hooks into the <cite>FINISH</cite> signal and does just that.
+If your module is a python-based web application which needs to have a
+virtualenv - porter has a plugin which can do it for you.</p>
+<p>Each plugin can extend the available command-line arguments. Here&#8217;s an example
+of how my own project&#8217;s command-line looks like::</p>
+<div class="highlight-python"><div class="highlight"><pre>porter-admin.py deploy --help
+usage: porter-admin.py deploy [-h] [--host HOST] [--config CONFIG]
+                              [--release RELEASE] [--force FORCE]
+                              [--update-crontab] [--update-requirements]
+                              [--update-launcher] [--restart]
+                              [--update-vassal-launcher] [--migrate-database]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --host HOST
+  --config CONFIG
+  --release RELEASE, -r RELEASE
+  --force FORCE         Force specific modules to deploy. Specify empty string
+                        to force all modules to be re-deployed
+
+porter.plugins.crontab:
+  --update-crontab      Update crontab
+
+porter.plugins.python.virtualenv:
+  --update-requirements
+                        Install or update requirements to virtualenv
+
+porter.plugins.supervisor:
+  --update-launcher     Update supervisor launcher
+
+porter.plugins.uwsgi:
+  --restart             Restart the uWSGI process
+  --update-vassal-launcher
+                        Update launcher definition
+
+porter.plugins.python.django:
+  --migrate-database    Perform database migrations
+</pre></div>
+</div>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python/base.html">Python base plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/virtualenv.html">Virtualenv plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/django.html">Django plugin</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../under-the-hood/scm.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="python/base.html"
+                        title="next chapter">Python base plugin</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/plugins/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="python/base.html" title="Python base plugin"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../under-the-hood/scm.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mateusz Mikołajczyk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

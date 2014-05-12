@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Django plugin &mdash; porter 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="porter 0.2.0 documentation" href="../../index.html" />
+    <link rel="up" title="Available plugins" href="../index.html" />
+    <link rel="prev" title="Virtualenv plugin" href="virtualenv.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Virtualenv plugin"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Available plugins</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="django-plugin">
+<h1>Django plugin<a class="headerlink" href="#django-plugin" title="Permalink to this headline">¶</a></h1>
+<p>This plugin helps you with deploying your django-based apps</p>
+<p>Available command-line arguments:</p>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--migrate-database</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>After source is deployed, you can use this switch to perform database
+migrations (syncdb and / or south&#8217;s migrate). This switch is optional.</td></tr>
+</tbody>
+</table>
+<p>Available variables inside the module ini file:</p>
+<dl class="docutils">
+<dt>migrate [optional]:</dt>
+<dd>If you want to explicitely disable the database migrations for this module,
+set this to 0. Other modules won&#8217;t be affected</dd>
+<dt>settings_file [optional, default: local_settings.py]</dt>
+<dd><p class="first">If you have <cite>settings_file</cite> within your config/[config] directory, it
+will be copied to your project&#8217;s destpath.</p>
+<p>This is useful, if your settings.py looks like this:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">local_settings</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</dd>
+<dt>settings_dir  [optional]</dt>
+<dd>If your local_settings should be located in some subdirectory of the
+project&#8217;s root directory, specify it here.</dd>
+</dl>
+<p>Example sections:</p>
+<div class="highlight-python"><div class="highlight"><pre>[plugin:porter.plugins.python.django]
+; this is an empty section, therefore the plugin will try to look for
+; local_settings.py inside the config subdirs and it will copy it
+; to project destpath
+
+[plugin:porter.plugins.python.django]
+; disable all migrations on this module, even if --migrate-database is
+; specified
+migrate = 0
+
+[plugin:porter.plugins.python.django]
+; copy myconfig.py instead of local_settings.py
+settings_file = myconfig.py
+; place it within project/settings/config dir
+settings_dir  = settings/config
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="virtualenv.html"
+                        title="previous chapter">Virtualenv plugin</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/plugins/python/django.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Virtualenv plugin"
+             >previous</a> |</li>
+        <li><a href="../../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Available plugins</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mateusz Mikołajczyk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

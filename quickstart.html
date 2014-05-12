@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Quickstart &mdash; porter 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="porter 0.2.0 documentation" href="index.html" />
+    <link rel="next" title="Under the hood" href="under-the-hood/index.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="under-the-hood/index.html" title="Under the hood"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we&#8217;re going to take a quick look on porter and what it can
+do for you in order to make your life easier when it comes to deploying your
+code.</p>
+<div class="section" id="create-a-project-directory">
+<h2>Create a project directory<a class="headerlink" href="#create-a-project-directory" title="Permalink to this headline">¶</a></h2>
+<p>Porter assumes, that your project consists of modules, which can be dependent
+on each other. each project must have it&#8217;s own directory.:</p>
+<div class="highlight-python"><div class="highlight"><pre>mkdir project
+touch project.ini
+</pre></div>
+</div>
+</div>
+<div class="section" id="project-ini">
+<h2>project.ini<a class="headerlink" href="#project-ini" title="Permalink to this headline">¶</a></h2>
+<p>In this file, we are going to specify what is the root module of your project:</p>
+<div class="highlight-python"><div class="highlight"><pre>[project]
+name = My great project
+depends = root
+
+[hosts]
+testing = user@testing-host.tld
+production = user@production-host.tld
+vbox = user@192.168.56.101
+</pre></div>
+</div>
+<p>You can specify a different directory for your modules, if you don&#8217;t want to
+make a mess out of your project directory, by adding a section <cite>modules</cite> to
+the project.ini file, like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">modules</span><span class="p">]</span>
+<span class="n">module1</span> <span class="o">=</span> <span class="n">workers</span><span class="o">/</span><span class="n">module1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-modules">
+<h2>Adding modules<a class="headerlink" href="#adding-modules" title="Permalink to this headline">¶</a></h2>
+<p>This is where the fun begins!</p>
+<p>In order to deploy a module, porter must know something about it. Let&#8217;s create
+a module directory, and see what we can put inside module definition file.:</p>
+<div class="highlight-python"><div class="highlight"><pre>mkdir root
+touch root/root.ini
+</pre></div>
+</div>
+<p>Please note, that the .ini file must be named the same way as the module itself.</p>
+<p>Example .ini file::</p>
+<div class="highlight-python"><div class="highlight"><pre>[module]
+path = /home/user/project/apps/root
+path-vbox = /different/path/on/vbox
+depends = uwsgi,module1
+
+[scm]
+url = git://git@myrepo.tld:reponame.git
+
+[release:stable]
+branch = release/0.1.2
+</pre></div>
+</div>
+<p>Let&#8217;s examine this file and see what does it mean.</p>
+<p><cite>module</cite> section:</p>
+<dl class="docutils">
+<dt><strong>path</strong></dt>
+<dd>This is a special variable, which will specify where the source code has
+to be uploaded to.</dd>
+<dt><strong>path-vbox</strong></dt>
+<dd>If you want to override the value of a variable per a specific host, you
+need to suffix it with the host name (in this case, the path will be
+different on vbox host)</dd>
+<dt><strong>depends</strong></dt>
+<dd>module dependencies. Multiple modules should be joined by comma, e.g
+module1,module2,module3</dd>
+</dl>
+<p><cite>scm</cite> section:</p>
+<dl class="docutils">
+<dt><strong>url</strong></dt>
+<dd>This is a one-line definition of where our source code is located. first
+part (the &#8216;protocol&#8217;) is mapped to module name inside porter.core.scm
+package, and the rest is passed to it&#8217;s constructor.</dd>
+</dl>
+<p><cite>release</cite> section:</p>
+<p>You can have multiple &#8216;releases&#8217; inside your project. You <strong>must</strong> prefix them
+with <cite>release</cite> name. The key thing to remember here is that if you deploy with
+one particular release, all modules will be deployed with this particular
+release.</p>
+<p>The variables are dependent on what is specified as the scm class. For example,
+git repository can be checked out on either a branchname or tag, therefore
+both of these keys are allowed here:</p>
+<div class="highlight-python"><div class="highlight"><pre>[release:stable]
+branch = release/stable
+tag = my-stable-tag
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quickstart</a><ul>
+<li><a class="reference internal" href="#create-a-project-directory">Create a project directory</a></li>
+<li><a class="reference internal" href="#project-ini">project.ini</a></li>
+<li><a class="reference internal" href="#adding-modules">Adding modules</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="under-the-hood/index.html"
+                        title="next chapter">Under the hood</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/quickstart.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="under-the-hood/index.html" title="Under the hood"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mateusz Mikołajczyk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

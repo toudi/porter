@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Virtualenv plugin &mdash; porter 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="porter 0.2.0 documentation" href="../../index.html" />
+    <link rel="up" title="Available plugins" href="../index.html" />
+    <link rel="prev" title="Python base plugin" href="base.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="base.html" title="Python base plugin"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Available plugins</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="virtualenv-plugin">
+<h1>Virtualenv plugin<a class="headerlink" href="#virtualenv-plugin" title="Permalink to this headline">¶</a></h1>
+<p>This plugin keeps track of your virtualenv for the modules.</p>
+<p>Available command-line arguments:</p>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--update-requirements</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>if you specify requirement locations in the ini file, this plugin can
+install the requirements before source code is deployed to the machine,
+so that no import errors occur. This option is switched off by default,
+because this can be a lengthy process, and is not needed every time you
+do a deployment</td></tr>
+</tbody>
+</table>
+<p>Available variables inside the module ini file:</p>
+<dl class="docutils">
+<dt>path</dt>
+<dd>A path within server where the virtualenv should be created.
+Missing parent directories will be created automatically (using mkdir -p)</dd>
+<dt>requirements</dt>
+<dd><p class="first">If your module has some requirements which need to be installed into
+the newly created virtualenv, you can specify them here.</p>
+<p class="last">multiple requirements must be joined by comma. If you want to install
+requirements from text file, you must prefix it with <cite>file:</cite>. If you want to
+refer to the module destination path, you must prefix it with <cite>__destpath__</cite></p>
+</dd>
+</dl>
+<p>Example section:</p>
+<div class="highlight-python"><div class="highlight"><pre>[plugin:porter.plugins.python.virtualenv]
+path = /home/path/module-venv
+requirements = gevent,file:__destpath__/requirements/common.txt,file:__destpath__/requirements/production.txt
+</pre></div>
+</div>
+<p>Please note, that virtualenv plugin can be linked to be used together with
+supervisor plugin. For the details, please refer to the supervisor plugin
+documentation</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="base.html"
+                        title="previous chapter">Python base plugin</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/plugins/python/virtualenv.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="base.html" title="Python base plugin"
+             >previous</a> |</li>
+        <li><a href="../../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Available plugins</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mateusz Mikołajczyk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
