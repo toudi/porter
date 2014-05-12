@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Under the hood &mdash; porter 0.2.0 documentation</title>
+    <title>Crontab &mdash; porter 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -24,8 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="porter 0.2.0 documentation" href="../index.html" />
-    <link rel="next" title="Project" href="project.html" />
-    <link rel="prev" title="How does the deployment process work?" href="../how-does-it-work.html" /> 
+    <link rel="up" title="Available plugins" href="index.html" />
+    <link rel="next" title="Supervisor plugin" href="supervisor.html" />
+    <link rel="prev" title="Django plugin" href="python/django.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,12 +36,13 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="project.html" title="Project"
+          <a href="supervisor.html" title="Supervisor plugin"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../how-does-it-work.html" title="How does the deployment process work?"
+          <a href="python/django.html" title="Django plugin"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Available plugins</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -49,21 +51,21 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="under-the-hood">
-<h1>Under the hood<a class="headerlink" href="#under-the-hood" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="project.html">Project</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module.html">Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module.html#plugins">Plugins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html#deployment-py">deployment.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html#configuration">Configuration</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scm.html">Source control management</a></li>
-</ul>
-</div>
+  <div class="section" id="crontab">
+<h1>Crontab<a class="headerlink" href="#crontab" title="Permalink to this headline">¶</a></h1>
+<p>This plugin is used to update crontab entries</p>
+<p>Available command-line arguments:</p>
+<dl class="docutils">
+<dt>&#8211;update-crontab</dt>
+<dd>If you use this switch, the plugin will look for crontab file, send it
+to destination machine and update crontab entries.</dd>
+</dl>
+<p>Available variables inside the module ini file:</p>
+<dl class="docutils">
+<dt>file [optional, default: module name.crontab]</dt>
+<dd>The file to look for. It should be placed in &#8216;crontab&#8217; subdirectory of your
+module.</dd>
+</dl>
 </div>
 
 
@@ -73,14 +75,14 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../how-does-it-work.html"
-                        title="previous chapter">How does the deployment process work?</a></p>
+  <p class="topless"><a href="python/django.html"
+                        title="previous chapter">Django plugin</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="project.html"
-                        title="next chapter">Project</a></p>
+  <p class="topless"><a href="supervisor.html"
+                        title="next chapter">Supervisor plugin</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/under-the-hood/index.txt"
+    <li><a href="../_sources/plugins/crontab.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -107,12 +109,13 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="project.html" title="Project"
+          <a href="supervisor.html" title="Supervisor plugin"
              >next</a> |</li>
         <li class="right" >
-          <a href="../how-does-it-work.html" title="How does the deployment process work?"
+          <a href="python/django.html" title="Django plugin"
              >previous</a> |</li>
-        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Available plugins</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

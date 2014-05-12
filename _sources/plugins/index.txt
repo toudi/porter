@@ -53,3 +53,6 @@ Contents:
    ./python/base
    ./python/virtualenv
    ./python/django
+   ./crontab
+   ./supervisor
+   ./uwsgi

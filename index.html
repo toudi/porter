@@ -47,8 +47,8 @@
             
   <div class="section" id="welcome-to-porter-s-documentation">
 <h1>Welcome to porter&#8217;s documentation!<a class="headerlink" href="#welcome-to-porter-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Porter is an easy-to-use deployment framework. It supports dependencies, and
-doesn&#8217;t need anything besides shell installed on the target machine.</p>
+<p>Porter is an easy-to-use deployment framework, based on fabulous fabric library.
+It supports dependencies, and doesn&#8217;t need anything besides shell installed on the target machine.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -56,16 +56,31 @@ doesn&#8217;t need anything besides shell installed on the target machine.</p>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#create-a-project-directory">Create a project directory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#project-ini">project.ini</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#adding-modules">Adding modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#adding-modules">Adding modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#deploy">Deploy!</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="under-the-hood/index.html">Under the hood</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="how-does-it-work.html">How does the deployment process work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="under-the-hood/index.html">Under the hood</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="under-the-hood/project.html">Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="under-the-hood/module.html">Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="under-the-hood/module.html#plugins">Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="under-the-hood/module.html#deployment-py">deployment.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="under-the-hood/module.html#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="under-the-hood/scm.html">Source control management</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="plugins/index.html">Available plugins</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="plugins/python/base.html">Python base plugin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plugins/python/virtualenv.html">Virtualenv plugin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plugins/python/django.html">Django plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins/crontab.html">Crontab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins/supervisor.html">Supervisor plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins/uwsgi.html">uWSGI</a></li>
 </ul>
 </li>
 </ul>

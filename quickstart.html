@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="porter 0.2.0 documentation" href="index.html" />
-    <link rel="next" title="Under the hood" href="under-the-hood/index.html" />
+    <link rel="next" title="How does the deployment process work?" href="how-does-it-work.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="under-the-hood/index.html" title="Under the hood"
+          <a href="how-does-it-work.html" title="How does the deployment process work?"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="installation.html" title="Installation"
@@ -59,6 +59,7 @@ code.</p>
 <p>Porter assumes, that your project consists of modules, which can be dependent
 on each other. each project must have it&#8217;s own directory.:</p>
 <div class="highlight-python"><div class="highlight"><pre>mkdir project
+cd project
 touch project.ini
 </pre></div>
 </div>
@@ -141,6 +142,14 @@ branch = release/stable
 tag = my-stable-tag
 </pre></div>
 </div>
+<div class="section" id="deploy">
+<h3>Deploy!<a class="headerlink" href="#deploy" title="Permalink to this headline">¶</a></h3>
+<p>inside your project directory, execute the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>porter-admin deploy --host vbox --config production
+</pre></div>
+</div>
+<p>And let the magic begin ;)</p>
+</div>
 </div>
 </div>
 
@@ -155,7 +164,10 @@ tag = my-stable-tag
 <li><a class="reference internal" href="#">Quickstart</a><ul>
 <li><a class="reference internal" href="#create-a-project-directory">Create a project directory</a></li>
 <li><a class="reference internal" href="#project-ini">project.ini</a></li>
-<li><a class="reference internal" href="#adding-modules">Adding modules</a></li>
+<li><a class="reference internal" href="#adding-modules">Adding modules</a><ul>
+<li><a class="reference internal" href="#deploy">Deploy!</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -164,8 +176,8 @@ tag = my-stable-tag
   <p class="topless"><a href="installation.html"
                         title="previous chapter">Installation</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="under-the-hood/index.html"
-                        title="next chapter">Under the hood</a></p>
+  <p class="topless"><a href="how-does-it-work.html"
+                        title="next chapter">How does the deployment process work?</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/quickstart.txt"
@@ -195,7 +207,7 @@ tag = my-stable-tag
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="under-the-hood/index.html" title="Under the hood"
+          <a href="how-does-it-work.html" title="How does the deployment process work?"
              >next</a> |</li>
         <li class="right" >
           <a href="installation.html" title="Installation"

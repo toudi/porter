@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Under the hood &mdash; porter 0.2.0 documentation</title>
+    <title>Supervisor plugin &mdash; porter 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="porter 0.2.0 documentation" href="../index.html" />
-    <link rel="next" title="Project" href="project.html" />
-    <link rel="prev" title="How does the deployment process work?" href="../how-does-it-work.html" /> 
+    <link rel="up" title="Available plugins" href="index.html" />
+    <link rel="prev" title="Django plugin" href="python/django.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,12 +35,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="project.html" title="Project"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../how-does-it-work.html" title="How does the deployment process work?"
+          <a href="python/django.html" title="Django plugin"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Available plugins</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -49,21 +47,27 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="under-the-hood">
-<h1>Under the hood<a class="headerlink" href="#under-the-hood" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="project.html">Project</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module.html">Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module.html#plugins">Plugins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html#deployment-py">deployment.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html#configuration">Configuration</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scm.html">Source control management</a></li>
-</ul>
-</div>
+  <div class="section" id="supervisor-plugin">
+<h1>Supervisor plugin<a class="headerlink" href="#supervisor-plugin" title="Permalink to this headline">¶</a></h1>
+<p>If you want to launch some daemons using supervisor, use this plugin.</p>
+<p>The plugin will stop your launcher before source code deployment, and re-launch
+it after the deployment is done (and code is updated).</p>
+<p>Available command-line arguments:</p>
+<dl class="docutils">
+<dt>&#8211;update-launcher</dt>
+<dd>If you want to update supervisor&#8217;s definition of your launcher, use
+this switch.</dd>
+</dl>
+<p>Available variables inside the module ini file:</p>
+<dl class="docutils">
+<dt>launcher [optional, default: module name.conf]</dt>
+<dd>During the deployment process, the plugin will copy launcher file from within
+your module&#8217;s &#8216;supervisor&#8217; directory into the destpath</dd>
+</dl>
+<p>After the launcher is copied to the destination machine, the plugin launches
+a signal (SIG_LAUNCHER_UPDATED) with the launcher path. You can hook up to this
+signal and react to it. By default, the virtualenv plugin listens to the
+signal and updates the paths accordingly</p>
 </div>
 
 
@@ -73,14 +77,11 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../how-does-it-work.html"
-                        title="previous chapter">How does the deployment process work?</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="project.html"
-                        title="next chapter">Project</a></p>
+  <p class="topless"><a href="python/django.html"
+                        title="previous chapter">Django plugin</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/under-the-hood/index.txt"
+    <li><a href="../_sources/plugins/supervisor.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -107,12 +108,10 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="project.html" title="Project"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../how-does-it-work.html" title="How does the deployment process work?"
+          <a href="python/django.html" title="Django plugin"
              >previous</a> |</li>
-        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Available plugins</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

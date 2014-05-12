@@ -6,13 +6,13 @@
 Welcome to porter's documentation!
 ==================================
 
-Porter is an easy-to-use deployment framework. It supports dependencies, and 
-doesn't need anything besides shell installed on the target machine.
+Porter is an easy-to-use deployment framework, based on fabulous fabric library.
+It supports dependencies, and doesn't need anything besides shell installed on the target machine.
 
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    ./installation
    ./quickstart

@@ -13,6 +13,7 @@ Porter assumes, that your project consists of modules, which can be dependent
 on each other. each project must have it's own directory.::
 
     mkdir project
+    cd project
     touch project.ini
 
 project.ini
@@ -82,6 +83,7 @@ Let's examine this file and see what does it mean.
     This is a one-line definition of where our source code is located. first
     part (the 'protocol') is mapped to module name inside porter.core.scm
     package, and the rest is passed to it's constructor.
+
 `release` section:
 
 You can have multiple 'releases' inside your project. You **must** prefix them
@@ -97,3 +99,11 @@ both of these keys are allowed here::
     branch = release/stable
     tag = my-stable-tag
 
+Deploy!
+-------
+
+inside your project directory, execute the following command: ::
+
+    porter-admin deploy --host vbox --config production
+
+And let the magic begin ;)

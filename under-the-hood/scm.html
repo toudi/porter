@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; porter 0.2.0 documentation</title>
+    <title>Source control management &mdash; porter 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,7 +25,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="porter 0.2.0 documentation" href="../index.html" />
     <link rel="up" title="Under the hood" href="index.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="module.html" /> 
+    <link rel="next" title="Available plugins" href="../plugins/index.html" />
+    <link rel="prev" title="Module" href="module.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +36,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="module.html" title="&lt;no title&gt;"
+          <a href="../plugins/index.html" title="Available plugins"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module.html" title="Module"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Under the hood</a> &raquo;</li> 
@@ -47,7 +51,34 @@
         <div class="bodywrapper">
           <div class="body">
             
-  
+  <div class="section" id="source-control-management">
+<h1>Source control management<a class="headerlink" href="#source-control-management" title="Permalink to this headline">¶</a></h1>
+<p>SCM classes are used to fetch current revision of your source code from repository
+and deploy it to target host.</p>
+<p>Currently, there two scm&#8217;s are implemented:</p>
+<dl class="docutils">
+<dt>git</dt>
+<dd>GIT support</dd>
+<dt>none</dt>
+<dd>This is not really a scm controller, and it should probably be removed
+in the future. It&#8217;s used for a scenario, where you want to install
+a package from PyPi into the virtualenv, but use a fixed version instead
+of current one.</dd>
+</dl>
+<p>Based on which scm you use, there are different attributes you can specify to
+check specific version of the code. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre>[scm]
+url = git://git@myurl.tld/repo.git
+
+[release:stable]
+branch = master
+
+[release:unstable]
+tag = never-deploy-that
+</pre></div>
+</div>
+</div>
+
 
           </div>
         </div>
@@ -56,7 +87,10 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="module.html"
-                        title="previous chapter">&lt;no title&gt;</a></p>
+                        title="previous chapter">Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../plugins/index.html"
+                        title="next chapter">Available plugins</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/under-the-hood/scm.txt"
@@ -86,7 +120,10 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="module.html" title="&lt;no title&gt;"
+          <a href="../plugins/index.html" title="Available plugins"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module.html" title="Module"
              >previous</a> |</li>
         <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Under the hood</a> &raquo;</li> 

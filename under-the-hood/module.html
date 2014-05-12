@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; porter 0.2.0 documentation</title>
+    <title>Module &mdash; porter 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="porter 0.2.0 documentation" href="../index.html" />
     <link rel="up" title="Under the hood" href="index.html" />
-    <link rel="next" title="&lt;no title&gt;" href="scm.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="project.html" /> 
+    <link rel="next" title="Source control management" href="scm.html" />
+    <link rel="prev" title="Project" href="project.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +36,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="scm.html" title="&lt;no title&gt;"
+          <a href="scm.html" title="Source control management"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="project.html" title="&lt;no title&gt;"
+          <a href="project.html" title="Project"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Under the hood</a> &raquo;</li> 
@@ -51,19 +51,134 @@
         <div class="bodywrapper">
           <div class="body">
             
-  
+  <div class="section" id="module">
+<h1>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h1>
+<p>Module is an atomic part of your project. One module can depend on other modules</p>
+<p>A module can use plugins, which extend the available command-line arguments
+when doing a deploy command.</p>
+<div class="section" id="plugins">
+<h2>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline">¶</a></h2>
+<p>If you want to use some of the plugins, just add it&#8217;s corresponding section
+to the ini file which starts with &#8216;plugin:&#8217;, like so:</p>
+<div class="highlight-python"><div class="highlight"><pre>(mymodule.ini)
+[plugin:porter.plugins. ... ]
+</pre></div>
+</div>
+<p>the verbose naming convention is no accident. If you want to use some plugin
+which isn&#8217;t located inside porter&#8217;s codebase, then you simply append it to
+your PYTHONPATH and thanks to the naming convention, porter can import the
+code:</p>
+<div class="highlight-python"><div class="highlight"><pre>(mymodule.ini)
+[plugin:my.private.plugin]
+</pre></div>
+</div>
+<p>During the deployment procedure, several signals are launched. Each of the plugins
+can listen to these signals and do something about it.</p>
+<p>Available signals:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Signal code</th>
+<th class="head">Sent on</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>SIG_SOURCE_PRE_SEND</td>
+<td>Before the source is rsynced to the destination machine</td>
+</tr>
+<tr class="row-odd"><td>SIG_SOURCE_POST_SEND</td>
+<td>After the source is rsynced</td>
+</tr>
+<tr class="row-even"><td>SIG_SOURCE_SEND</td>
+<td>This signal is used to perform the actual source code
+deployment. If you want to overwrite it by your own
+callable, use deployment.py file</td>
+</tr>
+<tr class="row-odd"><td>SIG_DEPLOY_START</td>
+<td>Entry point for the module&#8217;s deployment procedure</td>
+</tr>
+<tr class="row-even"><td>SIG_DEPLOY_FINISH</td>
+<td>Exit point for the module&#8217;s deployment procedure</td>
+</tr>
+<tr class="row-odd"><td>SIG_DEPLOY</td>
+<td>This signal is sent to perform the actual deployment.
+If you want to overwrite it, use deployment.py</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="deployment-py">
+<h2>deployment.py<a class="headerlink" href="#deployment-py" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s be honest - there is no such thing as an ideal config. IT projects are
+complex beasts and sometimes you want to add personal flavor to it. Here&#8217;s
+where deployment.py kicks in. You can use this file in order to add additional
+handlers to the signals, or to replace then altogether.</p>
+<p>You need to place this file inside the module&#8217;s directory.</p>
+<p>Example file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">porter.core.module</span> <span class="kn">import</span> <span class="n">SIG_SOURCE_POST_SEND</span>
+<span class="k">def</span> <span class="nf">register_signal_handlers</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+    <span class="n">module</span><span class="o">.</span><span class="n">push_signal_handler</span><span class="p">(</span><span class="n">SIG_SOURCE_POST_SEND</span><span class="p">,</span> <span class="n">post_send</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">post_send</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>When you&#8217;re deploying, it&#8217;s safe to say that you have different configurations
+depending on the machine you&#8217;re using (i.e. you use different database
+configurations on testing and production machine, etc). Porter must know where
+to fetch such files. This is why you can create config subdirectories
+within your module:</p>
+<div class="highlight-python"><div class="highlight"><pre>mymodule/
+mymodule/config/
+mymodule/config/production/
+mymodule/config/production/local_settings.py
+mymodule/config/testing/
+mymodule/config/testing/local_settings.py
+</pre></div>
+</div>
+<p>You can then specify this config by the <cite>config</cite> parameter:</p>
+<div class="highlight-python"><div class="highlight"><pre>porter-admin deploy --config testing
+</pre></div>
+</div>
+<p>if you are adding your own deployment hooks, porter offers you an API for
+copying such files:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">porter.tools.scp</span> <span class="kn">import</span> <span class="n">copy_config_file</span>
+
+<span class="n">copy_config_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s">&#39;local_settings.py&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which would copy local_settings.py from appropriate location</p>
+</div>
+</div>
+
 
           </div>
         </div>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Module</a><ul>
+<li><a class="reference internal" href="#plugins">Plugins</a></li>
+<li><a class="reference internal" href="#deployment-py">deployment.py</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="project.html"
-                        title="previous chapter">&lt;no title&gt;</a></p>
+                        title="previous chapter">Project</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="scm.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Source control management</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/under-the-hood/module.txt"
@@ -93,10 +208,10 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="scm.html" title="&lt;no title&gt;"
+          <a href="scm.html" title="Source control management"
              >next</a> |</li>
         <li class="right" >
-          <a href="project.html" title="&lt;no title&gt;"
+          <a href="project.html" title="Project"
              >previous</a> |</li>
         <li><a href="../index.html">porter 0.2.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Under the hood</a> &raquo;</li> 
